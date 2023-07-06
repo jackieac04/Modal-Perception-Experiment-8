@@ -103,57 +103,46 @@ let shape_A_preview_tmp;
 let shape_A_test_tmp;
 let shape_B_preview_tmp;
 let shape_B_test_tmp;
-let ball_A_color;
-let ball_B_color;
 
 let shape_C_preview_tmp;
 let shape_C_test_tmp;
 let shape_D_preview_tmp;
 let shape_D_test_tmp;
-let ball_C_color;
-let ball_D_color;
 
 let vertical_tmp_A;
 let vertical_tmp_B;
 let vertical_tmp_C;
 let vertical_tmp_D;
 let vertical_tmp_array = [-50,+50]; // positions the balls at the bottom of the screen 
-//red, yellow, green, blue, purple
-let colorArray = ['rgb(255, 10, 0)', 'rgb(255, 200, 0)', 'rgb(124, 255, 0)', 'rgb(0, 234, 255)', 'rgb(180, 0, 255)']
 /* generates nrepetitions of different types of trials and pushes them to trialsList */
 function trialGenerator(nRepetitions,trialsList) {
-    // for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are the same color
+    // for (let i = 0; i < nRepetitions; i++) { 
     //      setShape(2,5,1,1,0)
-    //      setColor(1,5,0)
     //      setTMP()
-    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "match", "samecolor")         
+    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "match")         
     // }
-    for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are different colors and the shapes are on the same colored disks
+    for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are and the shapes are on the 
         setShape(2,5,1,0,1)
-        setColor(2,5,1)
         setTMP()
-        pushTrialInfo(trialsList, "non_spatiotemporal", "match", "diffcolor") 
+        pushTrialInfo(trialsList, "non_spatiotemporal", "match") 
     }
 
     for (let i = 0; i < nRepetitions; i++) { //creates trials where the shapes at the end of the trial are different from the beginning
         setShape(3,5,1,0,2)
-        setColor(2,5,1)
         setTMP()
-        pushTrialInfo(trialsList, "non_spatiotemporal", 'new', 'diffcolor')
+        pushTrialInfo(trialsList, "non_spatiotemporal", 'new')
     }
 
     // for (let i = 0; i < nRepetitions; i++) { // 22 trials
     //      setShape(3,5,1,2,2) //selects 3 shapes from 5 randomly, then replaces one of the original shapes with a new one
-    //     setColor(1,5,0)
     //      setTMP()
-    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "new", "samecolor")
+    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "new")
     // }
 
     for (let i = 0; i < nRepetitions; i++) { // 44 trials
         setShape(2,5,1,1,0) //randomly selects 2 shapes from up to 5, then swaps them on the bottom circles
-        setColor(2, 5, 1) //up to 2 colors - 5 possible color values,  1 = different colors
         setTMP()
-        pushTrialInfo(trialsList, "non_spatiotemporal", "swap", "diffcolor")
+        pushTrialInfo(trialsList, "non_spatiotemporal", "swap")
     }
     trialsList = shuffle(trialsList);
     return trialsList;
@@ -176,14 +165,6 @@ function setShape(count, limit, arrNumBPrev, arrNumATest, arrNumBTest) {
     shape_A_test_tmp = shape_C_test_tmp = shapes[arrNumATest];
     shape_B_test_tmp = shape_D_test_tmp = shapes[arrNumBTest];
 }
-/* sets colors of disks based on num - 0 = same color, 1 = different color */
-function setColor(count, limit, num) {
-    colors = generateRandomNumbers(count, limit)
-    ball_A_color = colors[0];
-    ball_B_color = colors[num];
-    ball_C_color = colors[0];
-    ball_D_color = colors[num];
-}
 /* sets the positions of disks at the bottom of the screen */
 function setTMP() { 
         vertical = generateRandomNumbers(2, 2) 
@@ -191,19 +172,14 @@ function setTMP() {
         vertical_tmp_B = vertical_tmp_D = vertical_tmp_array[vertical[1]];
     }
 /* pushes info about each trial to the database. */
-function pushTrialInfo(trialsList, spatioType, matchType, colorType) {
+function pushTrialInfo(trialsList, spatioType, matchType) {
     trialsList.push({ //pushes info about each trial to the database
         "spatiotemporalType":spatioType,
         "matchType": matchType,
-        "colorType":colorType,
         "shape_A_pre_ind":shape_A_preview_tmp,
         "shape_A_test_ind":shape_A_test_tmp,
         "shape_B_pre_ind":shape_B_preview_tmp,
         "shape_B_test_ind":shape_B_test_tmp,  
-        "ball_A_color":ball_A_color,
-        "ball_B_color":ball_B_color, 
-        "ball_C_color":ball_C_color,
-        "ball_D_color":ball_D_color,  
         "ball_A_vertical":vertical_tmp_A,
         "ball_B_vertical":vertical_tmp_B,
         "responseC": "null",
@@ -258,49 +234,18 @@ let DHeight = vertical_tmp_B + 650;
 /* draws disks on the canvas. */
 Ball.prototype.draw_balls = function() {
     ctx_L.beginPath();
-    ctx_L.fillStyle = this.color; //in this case, "this." refers to Ball.prototype. to create a new funciton we would need to use [functionName].call(this)
+    ctx_L.strokeStyle = this.color;
+    ctx_L.lineWidth = 5;
     ctx_L.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-    ctx_L.fill();
+    ctx_L.stroke();
 };
-/*  updates color, when color_change_rate is zero, no color change */
-Ball.prototype.updateColor = function() {
-    let pos = colorArray.indexOf(this.color);
-    if(pos >= colorArray.length - 1 - color_change_rate) {
-        pos = colorArray.length - 1 -  pos;
-    } else {
-        pos = colorArray.indexOf(this.color);
-    }
-    this.color = colorArray[pos+color_change_rate];
-};
+
 let velX = 4.5;
 let velY = 1.5;
 let edgeX = 100;
 /* 
 updates position of a disk depending on which type of disk it is and where it is on the scren.
  */
-Ball.prototype.updatePosition_A = function() { //define the moving path
-    if (this.x < canvasWidth/2) {
-         this.x = this.x + velX;
-         if (this.x <= canvasWidth/2-edgeX) { //these ifs cause vertical movement
-             this.y = this.y - velY;
-         }
-    } else {
-        this.x = canvasWidth/2;
-        this.y = this.y+0;
-    }
-};
-Ball.prototype.updatePosition_B = function() {    
-    if (this.x > canvasWidth/2) {
-         this.x = this.x - velX;
-         if (this.x >= canvasWidth/2+edgeX) {
-             this.y = this.y + velY;
-         }
-    } else {
-        this.x = canvasWidth/2;
-        this.y = this.y+0;
-    }
-};
-
 Ball.prototype.updatePosition = function(type) {
     if (type === 'a') {
         if (this.x < halfCanvasWidth) {
@@ -361,29 +306,29 @@ let balls_B = [];
 let balls_C = [];
 let balls_D = [];
 /* helper used to define properties of a disk. */
-function generateNewBallsHelper(ballColor, x, y) {
+function generateNewBallsHelper(x, y) {
     let balls = [];
 
     let ball = new Ball(
         x,
         y,
-        colorArray[ballColor],
+        "white",
         dotRadius,
     );
     balls.push(ball);
     return balls;
 }
 /* given a disk type, generates a disk with those specifications. */
-function generateNewBalls(ballColor, letter){ 
+function generateNewBalls(letter){ 
     switch (letter) {
         case 'a':
-            return generateNewBallsHelper(ballColor, AWidth, AHeight)
+            return generateNewBallsHelper(AWidth, AHeight)
         case 'b':
-            return generateNewBallsHelper(ballColor, BWidth, BHeight)
+            return generateNewBallsHelper(BWidth, BHeight)
         case 'c':
-            return generateNewBallsHelper(ballColor, CWidth, CHeight)
+            return generateNewBallsHelper(CWidth, CHeight)
         case 'd':
-            return generateNewBallsHelper(ballColor, DWidth, DHeight)
+            return generateNewBallsHelper( DWidth, DHeight)
             
     }
 }
@@ -391,10 +336,10 @@ function generateNewBalls(ballColor, letter){
 Creates a list with four generated disks.
 */
 function genBallCall(trialList, trial) {
-    balls_A = generateNewBalls(trialList[trial].ball_A_color, 'a');
-    balls_B = generateNewBalls(trialList[trial].ball_B_color, 'b');
-    balls_C = generateNewBalls(trialList[trial].ball_C_color, 'c');
-    balls_D = generateNewBalls(trialList[trial].ball_D_color, 'd');
+    balls_A = generateNewBalls('a');
+    balls_B = generateNewBalls('b');
+    balls_C = generateNewBalls('c');
+    balls_D = generateNewBalls('d');
     
     return [balls_A, balls_B, balls_C, balls_D]
 }
@@ -420,13 +365,8 @@ function style(type) {
     balls_A[0].draw_balls();
     balls_B[0].draw_balls();
     balls_C[0].draw_balls();
-    //balls_C[0].updateColor();
     balls_D[0].draw_balls();
-    //balls_D[0].updateColor();
-    if (type === ('c' || 'd')) {
-        // balls_A[0].updateColor();
-        // balls_B[0].updateColor();
-    }
+   
     stimuliPreview(); 
 }
 
@@ -510,13 +450,9 @@ function stimuliPreview() { // the phases before the disks and shapes move
 
         myTimeout11 = setTimeout(function() {  
             balls_A[0].draw_balls();
-            //balls_A[0].updateColor();
             balls_B[0].draw_balls();
-            //balls_B[0].updateColor();
             balls_C[0].draw_balls();
-            //balls_C[0].updateColor();
             balls_D[0].draw_balls();
-            //balls_D[0].updateColor();
             myTimeout12 = setTimeout(function() {
                 animate();
             },colorDisk)
@@ -525,7 +461,6 @@ function stimuliPreview() { // the phases before the disks and shapes move
 }
 
 let refresh_stimuliOnset_test = 0; //DO NOT make these const - even though they don't change it causes the occluder to disappear
-let color_change_rate = 0;
 let myTimeout;
 let myReq;
 let startResponseTiming = false;
@@ -547,24 +482,18 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     vertical_tmp_B = trialsInfo[curTrial].ball_B_vertical;
 }
     balls_A[0].draw_balls();
-    // balls_A[0].updateColor();
     balls_A[0].updatePosition('a');
     balls_B[0].draw_balls();
-    // balls_B[0].updateColor();
     balls_B[0].updatePosition('b');
     balls_C[0].draw_balls();
-    //balls_C[0].updateColor();
     balls_D[0].draw_balls();
-    //balls_D[0].updateColor();
     refresh_stimuliOnset_test ++;
     
     if (refresh_stimuliOnset_test < 76) {
         ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
         occluder_posY = 40;
         balls_C[0].draw_balls();
-        //balls_C[0].updateColor();
         balls_D[0].draw_balls();
-        //balls_D[0].updateColor();
         myReq = requestAnimationFrame(animate);
     } else { // QUESTION: WHY 76
        if (trainingTrial <= trialsInfo_training.length-1) {
@@ -588,9 +517,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
        // occluder_posY = occluder_posY + occluder_velY;
         balls_C[0].draw_balls();
-        //balls_C[0].updateColor();
         balls_D[0].draw_balls();
-        //balls_D[0].updateColor();
 
          if (refresh_stimuliOnset_test = 84) { // is this if () actually doing anything?
             setTimeout(function() {
