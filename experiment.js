@@ -3,10 +3,7 @@ const canvas_L = document.getElementById('canvas_L');
 const ctx_L = canvas_L.getContext('2d'); //determines the canvas to be 2D. 
 const halfCanvasWidth = canvas_L.width / 2; //half a canvas 
 const halfCanvasHeight = canvas_L.height / 2;
-
-const canvas_2 = document.getElementById('canvas_2')
-const ctx_2 = canvas_2.getContext('2d')
-const halfCanvasWidth_2 = canvas_2.width / 2
+canvas_L.height = canvas_L.height - 50;
 
 //--------------------------------------
 //---------SET PARAMETERS BEGIN---------
@@ -227,13 +224,13 @@ function Ball(x,y,color,size) {
 const nDots = 1; 
 const dotRadius = 40; //Radius of each dot in pixels
 let AWidth = halfCanvasWidth - 230;
-let AHeight =  halfCanvasHeight;
+let AHeight =  halfCanvasHeight - 125;
 let BWidth = halfCanvasWidth + 230;
-let BHeight = halfCanvasHeight;
+let BHeight = halfCanvasHeight - 125;
 let CWidth  = halfCanvasWidth;
-let CHeight = vertical_tmp_A + 650;
+let CHeight = vertical_tmp_A + 400;
 let DWidth = halfCanvasWidth;
-let DHeight = vertical_tmp_B + 650;
+let DHeight = vertical_tmp_B + 400;
 
 /* draws disks on the canvas. */
 Ball.prototype.draw_balls = function() {
@@ -362,7 +359,7 @@ function style(type) {
             $('#Instruction2').hide();
     }
     $('#canvas_L').show();
-    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-225);
     balls_A[0].draw_balls();
     balls_B[0].draw_balls();
     balls_C[0].draw_balls();
@@ -485,7 +482,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     refresh_stimuliOnset_test ++;
     
     if (refresh_stimuliOnset_test < 76) {
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-225);
         occluder_posY = 40;
         balls_C[0].draw_balls();
         balls_D[0].draw_balls();
@@ -561,7 +558,6 @@ if (responseAcceptable === true) {
         clearTimeout(myTimeout);
         refresh_stimuliOnset_test = 0;
         $('#canvas_L').hide();
-        $('#canvas_2').hide();
         $('#Instruction4').show();
         if (trainingTrial <= trialsInfo_training.length-1) {
             $('#nextTrainingTrialButton').show();
