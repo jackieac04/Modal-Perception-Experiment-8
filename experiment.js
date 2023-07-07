@@ -116,35 +116,40 @@ let vertical_tmp_D;
 let vertical_tmp_array = [-50,+50]; // positions the balls at the bottom of the screen 
 /* generates nrepetitions of different types of trials and pushes them to trialsList */
 function trialGenerator(nRepetitions,trialsList) {
-    // for (let i = 0; i < nRepetitions; i++) { 
-    //      setShape(2,5,1,1,0)
-    //      setTMP()
-    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "match")         
-    // }
-    for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are and the shapes are on the 
+    for (let i = 0; i < nRepetitions; i++) { //shapes are the same, appear on top disks
+        setShape(2,5,1,0,1)
+        setTMP()
+        pushTrialInfo(trialsList, "spatiotemporal", "match")      
+    }
+
+    for (let i = 0; i < nRepetitions; i++) { //one shape is different, appear on top disks
+        setShape(3,5,1,0,2) //selects 3 shapes from 5 randomly, then replaces one of the original shapes with a new one
+        setTMP()
+        pushTrialInfo(trialsList, "spatiotemporal", "new")
+    }
+
+    for (let i = 0; i < nRepetitions; i++) { //shapes are swapped, appear on top disks
+        setShape(2,5,1,1,0) 
+        setTMP()
+        pushTrialInfo(trialsList, "spatiotemporal", "swap")
+    }
+    for (let i = 0; i < nRepetitions; i++) { //shapes are the same, appear on bottom disks
         setShape(2,5,1,0,1)
         setTMP()
         pushTrialInfo(trialsList, "non_spatiotemporal", "match") 
     }
-
-    for (let i = 0; i < nRepetitions; i++) { //creates trials where the shapes at the end of the trial are different from the beginning
+    for (let i = 0; i < nRepetitions; i++) { //one shape is different, appear on bottom disks
         setShape(3,5,1,0,2)
         setTMP()
         pushTrialInfo(trialsList, "non_spatiotemporal", 'new')
     }
-
-    // for (let i = 0; i < nRepetitions; i++) { // 22 trials
-    //      setShape(3,5,1,2,2) //selects 3 shapes from 5 randomly, then replaces one of the original shapes with a new one
-    //      setTMP()
-    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "new")
-    // }
-
-    for (let i = 0; i < nRepetitions; i++) { // 44 trials
+    for (let i = 0; i < nRepetitions; i++) { //shapes are swapped, appear on bottom disks
         setShape(2,5,1,1,0) //randomly selects 2 shapes from up to 5, then swaps them on the bottom circles
         setTMP()
         pushTrialInfo(trialsList, "non_spatiotemporal", "swap")
     }
     trialsList = shuffle(trialsList);
+    console.log(trialsList)   
     return trialsList;
 }
 
@@ -260,11 +265,10 @@ Ball.prototype.updatePosition = function(type) {
         if (this.x > halfCanvasWidth) {
             this.x = this.x - velX;
             if (this.x >= halfCanvasWidth + edgeX) {
-                this.y = this.y + velY;
+                this.y = this.y + velY + .55; //.55 creates spacing between disks
             }
        } else {
            this.x = halfCanvasWidth;
-           this.y = this.y + .8;
        }
     }
   };
@@ -328,7 +332,6 @@ function generateNewBalls(letter){
             return generateNewBallsHelper(CWidth, CHeight)
         case 'd':
             return generateNewBallsHelper( DWidth, DHeight)
-            
     }
 }
 /*
@@ -504,12 +507,20 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         balls_C[0].draw_balls();
         balls_D[0].draw_balls();
 
-         if (refresh_stimuliOnset_test = 84) { // is this if () actually doing anything?
+         if (refresh_stimuliOnset_test === 84) { 
+
             setTimeout(function() {
-            ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27) // QUESTION: WHY -27?????
-            ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
-            responseAcceptable = true; // only allow response when the occlude is removed/equivalent time in no occluder condition
-            }, 1000);
+                if (trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal"
+                 || (trialsInfo[curTrial].spatiotemporalType === "non_spatiotemporal")) {
+                    ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27);
+                    ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
+                 }
+                 else {
+                    ctx_L.drawImage(shapeTmpA, balls_A[0].x-27, balls_A[0].y-27);
+                    ctx_L.drawImage(shapeTmpB, balls_B[0].x-27, balls_B[0].y-27);
+                 }
+                 responseAcceptable = true; // only allow response when the occlude is removed/equivalent time in no occluder condition
+                }, 1000);
          }  else {
             myReq = requestAnimationFrame(animate); //never gets called?
             }
@@ -600,5 +611,4 @@ $('#startExpButton').click(function() {
     showTrials('c');});
 $('#nextTrialButton').click(function() {
     showTrials('d');});
-//$('#submitButton').attr("onclick", "doneExperiment()");
 $('#submitButton').attr("onclick", "postData()");
