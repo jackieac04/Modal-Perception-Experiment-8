@@ -149,7 +149,6 @@ function trialGenerator(nRepetitions,trialsList) {
         pushTrialInfo(trialsList, "non_spatiotemporal", "swap")
     }
     trialsList = shuffle(trialsList);
-    console.log(trialsList)   
     return trialsList;
 }
 
@@ -465,7 +464,7 @@ let occluder_velY = 40;
 let occluder_posX = 0;
 let occluder_posY = 40;
 
-function animate() { // make the disks and the shapes move together, and occluder when spatiotemporal feature is inconsistent
+function animate() { // make the disks and the shapes move together and occluder
     myTimeout = setTimeout (function() {     
     ctx_L.fillStyle = 'gray';
     ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);
@@ -492,12 +491,12 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         balls_D[0].draw_balls();
         myReq = requestAnimationFrame(animate);
     } else { //after this period, occluder is removed
-       if (trainingTrial <= trialsInfo_training.length-1) {
+       if (trainingTrial < trialsInfo_training.length) {
             shapeInd_A_test = trialsInfo_training[trainingTrial].shape_A_test_ind;
             shapeInd_B_test = trialsInfo_training[trainingTrial].shape_B_test_ind;
         }
 
-        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
+        if (trainingTrial >= trialsInfo_training.length && curTrial >=0) {
             shapeInd_A_test = trialsInfo[curTrial].shape_A_test_ind;
             shapeInd_B_test = trialsInfo[curTrial].shape_B_test_ind;
         }
@@ -510,8 +509,8 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
          if (refresh_stimuliOnset_test === 84) { 
 
             setTimeout(function() {
-                if (trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal"
-                 || (trialsInfo[curTrial].spatiotemporalType === "non_spatiotemporal")) {
+                if (trialsInfo_training[trainingTrial] && trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal"
+                 || (trialsInfo[curTrial] && trialsInfo[curTrial].spatiotemporalType === "non_spatiotemporal")) {
                     ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27);
                     ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
                  }
@@ -522,7 +521,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
                  responseAcceptable = true; // only allow response when the occlude is removed/equivalent time in no occluder condition
                 }, 1000);
          }  else {
-            myReq = requestAnimationFrame(animate); //never gets called?
+            myReq = requestAnimationFrame(animate); 
             }
     }  
     }, freshRate)
