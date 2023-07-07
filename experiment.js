@@ -255,7 +255,6 @@ Ball.prototype.updatePosition = function(type) {
             }
        } else {
            this.x = halfCanvasWidth;
-        //    this.y = this.y+0;
        }
     } else if (type === 'b') {
         if (this.x > halfCanvasWidth) {
@@ -265,7 +264,7 @@ Ball.prototype.updatePosition = function(type) {
             }
        } else {
            this.x = halfCanvasWidth;
-        //    this.y = this.y+0;
+           this.y = this.y + .8;
        }
     }
   };
@@ -437,16 +436,10 @@ function stimuliPreview() { // the phases before the disks and shapes move
             shapeTmp = animationHelper(shapeInd_A_pre)
             
             ctx_L.drawImage(shapeTmp, balls_A[0].x-27, balls_A[0].y-27)
-            // ctx_L.fillStyle = 'white';
-            // ctx_L.font = "20px Arial";
-            // ctx_L.fillText(shapeInd_A_pre, balls_A[0].x, balls_A[0].y);
 
             shapeTmp = animationHelper(shapeInd_B_pre)
 
             ctx_L.drawImage(shapeTmp, balls_B[0].x-27, balls_B[0].y-27)
-            // ctx_L.fillStyle = 'white';
-            // ctx_L.font = "20px Arial";
-            // ctx_L.fillText(shapeInd_B_pre, balls_B[0].x, balls_B[0].y);
 
         myTimeout11 = setTimeout(function() {  
             balls_A[0].draw_balls();
@@ -495,7 +488,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         balls_C[0].draw_balls();
         balls_D[0].draw_balls();
         myReq = requestAnimationFrame(animate);
-    } else { // QUESTION: WHY 76
+    } else { //after this period, occluder is removed
        if (trainingTrial <= trialsInfo_training.length-1) {
             shapeInd_A_test = trialsInfo_training[trainingTrial].shape_A_test_ind;
             shapeInd_B_test = trialsInfo_training[trainingTrial].shape_B_test_ind;
@@ -505,17 +498,9 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             shapeInd_A_test = trialsInfo[curTrial].shape_A_test_ind;
             shapeInd_B_test = trialsInfo[curTrial].shape_B_test_ind;
         }
-            shapeTmpA = animationHelper(shapeInd_A_test)
-            // ctx_L.fillStyle = 'white';
-            // ctx_L.font = "20px Arial";
-            // ctx_L.fillText(shapeInd_A_test, balls_A[0].x, balls_A[0].y);
-           shapeTmpB = animationHelper(shapeInd_B_test)
-            // ctx_L.fillStyle = 'white';
-            // ctx_L.font = "20px Arial";
-            // ctx_L.fillText(shapeInd_B_test, balls_B[0].x, balls_B[0].y);
+        shapeTmpA = animationHelper(shapeInd_A_test)
+        shapeTmpB = animationHelper(shapeInd_B_test)
 
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-       // occluder_posY = occluder_posY + occluder_velY;
         balls_C[0].draw_balls();
         balls_D[0].draw_balls();
 
@@ -602,14 +587,8 @@ function download(content, fileName, contentType) {
     a.click();
 };
 
-// function doneExperiment() {
-//     JSONObj = JSON.stringify(window.frames);
-//     download(JSONObj, "test_data.json", "json"); 
-// };
 /* wait for clicks */
-
 // Testing data posting
-//$('#continueInstructionButton1').click(postData);
 $('#consented').click(showInstructions);
 $('#continueInstructionButton1').click(continueInstruction1);
 $('#startTrainingButton').click(function() {
