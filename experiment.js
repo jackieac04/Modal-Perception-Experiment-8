@@ -197,10 +197,12 @@ of nRepetitions (51). This is to ensure there are the same number of each differ
 type of trial (match, swap, new). 
 */
 let trialsInfo = []; //holds the information for the trials
+console.log(trialsInfo)
 const nRepetitions = 51; //number of each type (3) of trial = 51 * 3 = 153 trials
 trialsInfo = trialGenerator(nRepetitions,trialsInfo); //generates the trials
 
 let trialsInfo_training = []; //holds info for training trials
+console.log(trialsInfo_training)
 const nRepetitions_training = 1; //number of each type (3) of trial = 51* 3 = 3 trials
 trialsInfo_training = trialGenerator(nRepetitions_training,trialsInfo_training);
 const subjectID = getSubjectID();
@@ -506,11 +508,13 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
          if (refresh_stimuliOnset_test === 84) { 
 
             setTimeout(function() {
+                console.log(trialsInfo_training[trainingTrial] && trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal")
                 if (trialsInfo_training[trainingTrial] && trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal"
                  || (trialsInfo[curTrial] && trialsInfo[curTrial].spatiotemporalType === "non_spatiotemporal")) {
                     ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27);
                     ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
                  }
+                 
                  else {
                     ctx_L.drawImage(shapeTmpA, balls_A[0].x-27, balls_A[0].y-27);
                     ctx_L.drawImage(shapeTmpB, balls_B[0].x-27, balls_B[0].y-27);
