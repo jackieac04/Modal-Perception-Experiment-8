@@ -506,13 +506,11 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
          if (refresh_stimuliOnset_test === 84) { 
 
             setTimeout(function() {
-                if (trialsInfo_training[trainingTrial] && trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal"
+                if ((trialsInfo_training[trainingTrial] && trialsInfo_training[trainingTrial].spatiotemporalType === "non_spatiotemporal")
                  || (trialsInfo[curTrial] && trialsInfo[curTrial].spatiotemporalType === "non_spatiotemporal")) {
                     ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27);
                     ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
-                 }
-                 
-                 else {
+                 } else {
                     ctx_L.drawImage(shapeTmpA, balls_A[0].x-27, balls_A[0].y-27);
                     ctx_L.drawImage(shapeTmpB, balls_B[0].x-27, balls_B[0].y-27);
                  }
