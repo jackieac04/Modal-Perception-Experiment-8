@@ -333,7 +333,7 @@ function generateNewBalls(letter){
 /*
 Creates a list with four generated disks.
 */
-function genBallCall(trialList, trial) {
+function genBallCall() {
     balls_A = generateNewBalls('a');
     balls_B = generateNewBalls('b');
     balls_C = generateNewBalls('c');
@@ -375,7 +375,7 @@ function showTrials(type) {
     switch (type) {
         case 'a':
             instructions('#title', '#Instruction2', '#startTrainingButton', 'a')
-            genBallCall(trialsInfo_training, trainingTrial - 1);
+            genBallCall();
             style('a')
             break;
 
@@ -383,7 +383,7 @@ function showTrials(type) {
             instructions('#Instruction4', '#nextTrainingTrialButton', null, 'b')
     
             if (trainingTrial < trialsInfo_training.length) {
-                genBallCall(trialsInfo_training, trainingTrial - 1)
+                genBallCall()
                 style('b')
             } else {
                 $('#InstructionPractice').hide();
@@ -394,7 +394,7 @@ function showTrials(type) {
 
         case 'c':
             instructions('#title', '#Instruction3', '#startExpButton', 'c')
-            genBallCall(trialsInfo, curTrial)
+            genBallCall()
             style('c')
             break;
 
@@ -402,7 +402,7 @@ function showTrials(type) {
             instructions('#Instruction4', '#nextTrialButton', null, 'd')
 
             if (curTrial < trialsInfo.length) {
-                genBallCall(trialsInfo, curTrial - 1)
+                genBallCall()
                 style('d')
             } else {
                 $('#Instruction5').show();
